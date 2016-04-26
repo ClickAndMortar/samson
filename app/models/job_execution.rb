@@ -154,6 +154,11 @@ class JobExecution
     ActiveRecord::Base.clear_active_connections!
 
     ActiveSupport::Notifications.instrument("execute_shell.samson", payload) do
+      if @job.deploy.stage.kubernetes
+        # replace here so it does not have to take care of git setup
+        # OPTIONAL: just create the build here ?
+        @executor = Kubernetes::DeployExecutor.new(@output, job: @job) # needs to job to get the actual commit
+      end
       payload[:success] = @executor.execute!(*cmds)
     end
 
@@ -210,7 +215,7 @@ class JobExecution
 
   def lock_project(&block)
     holder = (stage.try(:name) || @job.user.name)
-    callback = proc { |owner| output.write("Waiting for repository while setting it up for #{owner}\n") if Time.now.to_i % 10 == 0 }
+    callback = proc { |owner| @output.write("Waiting for repository while setting it up for #{owner}\n") if Time.now.to_i % 10 == 0 }
     @job.project.with_lock(output: @output, holder: holder, error_callback: callback, timeout: lock_timeout, &block)
   end
 
