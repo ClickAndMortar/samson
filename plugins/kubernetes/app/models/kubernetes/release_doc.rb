@@ -94,6 +94,17 @@ module Kubernetes
       end
     end
 
+    def ensure_service
+      if service.nil?
+        'no Service defined'
+      elsif service.running?
+        'Service already running'
+      else
+        'creating Service'
+        client.create_service(Kubeclient::Service.new(service_hash))
+      end
+    end
+
     private
 
     def previous_deploy?(extension_client, deployment)

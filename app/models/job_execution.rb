@@ -85,7 +85,6 @@ class JobExecution
   private
 
   def stage
-    # TODO -- this class should not know about stages
     @job.deploy.try(:stage)
   end
 
@@ -154,12 +153,12 @@ class JobExecution
     ActiveRecord::Base.clear_active_connections!
 
     ActiveSupport::Notifications.instrument("execute_shell.samson", payload) do
-      if @job.deploy.stage.kubernetes
-        # replace here so it does not have to take care of git setup
-        # OPTIONAL: just create the build here ?
-        @executor = Kubernetes::DeployExecutor.new(@output, job: @job) # needs to job to get the actual commit
+      payload[:success] = if stage.try(:kubernetes)
+        @executor = Kubernetes::DeployExecutor.new(@output, job: @job)
+        @executor.execute!
+      else
+        @executor.execute!(*cmds)
       end
-      payload[:success] = @executor.execute!(*cmds)
     end
 
     Samson::Hooks.fire(:after_job_execution, @job, payload[:success], @output)

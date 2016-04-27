@@ -118,15 +118,8 @@ module Kubernetes
       release.release_docs.each do |release_doc|
         role = release_doc.kubernetes_role
         service = release_doc.service
-
-        if service.nil?
-          @output.puts "no Service defined for role #{role.name}"
-        elsif service.running?
-          @output.puts "Service #{service.name} already running for role #{role.name}"
-        else
-          @output.puts "Creating service #{service.name} for role #{role.name}"
-          release_doc.client.create_service(Kubeclient::Service.new(release_doc.service_hash))
-        end
+        status = release_doc.ensure_service
+        @output.puts "#{status} for role #{role.name} / service #{service ? service.name : "none"}"
       end
     end
   end
