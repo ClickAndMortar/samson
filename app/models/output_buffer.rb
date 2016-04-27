@@ -56,10 +56,6 @@ class OutputBuffer
     @closed
   end
 
-  # needed to work as IO for SSE engine when deploying via kubernetes
-  def flush
-  end
-
   def each(&block)
     # If the buffer is closed, there's no reason to block the listening
     # thread - just yield all the buffered chunks and return.

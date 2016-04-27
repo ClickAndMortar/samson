@@ -100,8 +100,8 @@ module Kubernetes
       elsif service.running?
         'Service already running'
       else
-        'creating Service'
         client.create_service(Kubeclient::Service.new(service_hash))
+        'creating Service'
       end
     end
 

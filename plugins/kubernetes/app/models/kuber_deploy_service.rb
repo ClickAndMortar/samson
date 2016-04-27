@@ -51,7 +51,6 @@ class KuberDeployService
       project: project.name
     )
 
-    SseRailsEngine.send_event('k8s-log', extra_info.merge(message: msg)) # FIXME: hacky and untested
     Kubernetes::Util.log msg, extra_info
   end
 
