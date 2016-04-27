@@ -33,8 +33,13 @@
 
   <%= Samson::Hooks.render_views(:stage_show, self) %>
 
-  <h2>Script</h2>
-  <pre class="pre-command"><%= "set -ex\n" + @stage.script %></pre>
+  <%# TODO: make the plugin hide this via js %>
+  <% if @stage.kubernetes %>
+    <h2>Deployed via kubernetes</h2>
+  <% else %>
+    <h2>Script</h2>
+    <pre class="pre-command"><%= "set -ex\n" + @stage.script %></pre>
+  <% end %>
 
   <% if groups = @stage.deploy_groups.sort_by(&:natural_order).to_a.presence %>
     <h2>Deploy groups</h2>

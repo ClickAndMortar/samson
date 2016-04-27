@@ -8,9 +8,13 @@ module Watchers
 
     class << self
       def restart_watcher(project)
+        stop_watcher(project)
+        start_watcher(project)
+      end
+
+      def stop_watcher(project)
         watcher = Celluloid::Actor[watcher_symbol(project)]
         watcher.terminate if watcher && watcher.alive?
-        start_watcher(project)
       end
 
       private
