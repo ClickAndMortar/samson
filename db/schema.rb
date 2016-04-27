@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 20160426223230) do
     t.datetime "deleted_at"
     t.integer  "build_id",   limit: 4
     t.boolean  "release",                default: false, null: false
+    t.boolean  "kubernetes",             default: false, null: false
   end
 
   add_index "deploys", ["build_id"], name: "index_deploys_on_build_id", using: :btree
