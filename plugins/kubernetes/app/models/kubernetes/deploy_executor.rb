@@ -1,3 +1,5 @@
+# executes a deploy and writes log to job output
+# finishes when cluster is "Ready"
 module Kubernetes
   class DeployExecutor
     def initialize(output, job:)

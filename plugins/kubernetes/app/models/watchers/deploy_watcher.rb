@@ -12,12 +12,12 @@ module Watchers
         start_watcher(project)
       end
 
+      private
+
       def stop_watcher(project)
         watcher = Celluloid::Actor[watcher_symbol(project)]
         watcher.terminate if watcher && watcher.alive?
       end
-
-      private
 
       def watcher_symbol(project)
         "deploy-watcher-#{project.id}".to_sym

@@ -75,10 +75,7 @@
   <% end %>
 </fieldset>
 
-<%# TODO: make the plugin hide this via js %>
-<% unless @stage.kubernetes %>
-  <%= render 'shared/commands', form: form %>
-<% end %>
+<%= render 'shared/commands', form: form %>
 
 <fieldset>
   <legend>Dashboard</legend>
